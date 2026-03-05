@@ -20,8 +20,10 @@ let renderTasks = () => {
     const deleteBtn = document.createElement("button");
     const check = document.createElement("input");
     check.type = "checkbox";
+    check.dataset.id = task.date;
     check.className = "notCompleted";
     deleteBtn.id = "deleteBtn"
+    deleteBtn.dataset.id = task.date;
 
     document.getElementById("tasks").appendChild(singleTaskContainer);
 
@@ -32,9 +34,7 @@ let renderTasks = () => {
     if (task["isCompleted"]) {
       singleTaskContainer.className = "completed";
       check.checked = true;
-    } else {
-      console.log("not completed");
-    }
+    } else {}
   });
 };
 
@@ -52,11 +52,16 @@ document.getElementById("addBtn").addEventListener("click", () => {
 
 taskContainer.addEventListener("click", (event) => {
   if(event.target.type == "checkbox"){
-    // the code here will change the property of the task
+    const toChange = taskArray.find(({ date }) => date == event.target.dataset.id);
+    if(toChange.isCompleted) toChange.isCompleted = false
+    else toChange.isCompleted = true
+    renderTasks();
   }
   else if(event.target.id == "deleteBtn"){
-    // the code here will delete the task completely
+    taskArray = taskArray.filter(({date}) => date != event.target.dataset.id)
+    localStorage.setItem("tasks", JSON.stringify(taskArray));
+    renderTasks();
   }
 })
 
-// next time get the ids(date) to every task and based on them do the code of deletion andd changing the completion status
+// Add the alert for deletion and implement style to everything, and also add a neccesity that task has to have text
